@@ -1,0 +1,94 @@
+const express=require('express');
+
+const BookModel =require('../BooKDB/BookDB')
+const {
+    BodyValidator,
+    chooseBookValidator,
+    bookId
+} =require('../BookValidate/BookValidation')
+
+const BookRouters = express.Router()
+
+//Post
+BookRouters.post('/Books',chooseBookValidator,BodyValidator,createBooks);
+async function createBooks(req,res) {
+    try{
+        const data = req.body
+        if(Array.isArray(data)){
+            const createBooks = await BookModel.insertMany(data)
+            return res.json({message:req.t('bookCreated'),BooK:createBooks})
+        }
+        else{
+            const createBooks = await BookModel.create(data)
+            return res.json({message:req.t('bookCreated'),BooK:createBooks})
+        }
+    }
+    catch(error){
+        return res.status(400).json({message:'Book not crreate',error})
+    }
+}
+//Get
+BookRouters.get('/Books',findBooks);
+BookRouters.get('/Books/:id',bookId,BodyValidator,findBooks);
+async function findBooks(req,res) {
+    try{
+        if(req.params.id){
+            const findBooks = await BookModel.findById(req.params.id)
+             return res.json({message:req.t('bookNotFound')})
+        }
+        else{
+            const findBooks = await BookModel.find()
+            return res.json({message:req.t('bookNotFound')})
+        }
+    }
+    catch(error){
+        res.status(400).json({message:'Book Not Found',error})
+    }
+}
+
+BookRouters.put('/Books/:id',bookId,BodyValidator,updatedBooks);
+BookRouters.patch('/Books/:id',bookId,BodyValidator,updatedBooks);
+BookRouters.put('/Books',updatedBooks);
+BookRouters.patch('/Books',updatedBooks);
+async function updatedBooks(req,res) {
+    try{
+        if(req.params.id){
+            const updatedBooks = await BookModel.findByIdAndUpdate(
+                req.params.id,
+                req.body,
+            {new:true, runValidators:true})
+            return res.json({message:req.t('bookUpdatedSuccessfully')})
+        }
+        else{
+            const updatedBooks = await Promise.all(req.body.map(x=>(BookModel.findByIdAndUpdate(
+                x.id,
+                x,
+                {new:true,runValidators:true}
+            ))))
+            return res.json({message:req.t('bookUpdatedSuccessfully')})
+        }
+    }
+     catch(error){
+        res.status(400).json({message:'Book not Updated',error})
+        }
+}
+//Delete
+BookRouters.delete('/Books', deletedBooks)
+BookRouters.delete('/Books/:id',bookId,BodyValidator, deletedBooks)
+async function deletedBooks(req,res) {
+    try{
+        if(req.params.id){
+            const deletedBooks = await BookModel.findByIdAndDelete(
+            req.params.id)
+            return res.json({message:req.t('bookDeletedSuccessfully')})
+        }
+        else{
+            const deletedBook = await Promise.all(req.body.map(x=>(BookModel.findByIdAndDelete(x.id))))
+            return res.json({message:req.t('bookDeletedSuccessfully')})
+        }   
+    }
+    catch(error){
+        res.status(400).json({messsage:'Book was not delete',error})
+        }
+}
+module.exports=BookRouters

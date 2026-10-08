@@ -1,0 +1,26 @@
+{
+  "name": "plp4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon iindex.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "db": "^6.0.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "i18next": "^26.4.2",
+    "i18next-fs-backend": "^2.6.8",
+    "i18next-http-middleware": "^3.9.9",
+    "mongo": "^0.1.0",
+    "mongoose": "^9.10.1",
+    "nodemon": "^3.1.14"
+  }
+}

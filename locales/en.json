@@ -1,0 +1,7 @@
+{
+    "bookCreated": "Book Created Successfully",
+    "bookNotFound":"Book not found",
+    "bookUpdatedSuccessfully":"Book Updateded Successfully",
+    "bookDeletedSuccessfully":"Book Deleted Successfuly",
+    "invalidBookId":"Invalid Book Id"
+}
